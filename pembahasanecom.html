@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ecomm</title>
+    <style>
+        tr,td,table{
+                border: 1px solid gray;
+                border-collapse: collapse;
+                padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <h1>E commerce Sederhana</h1>
+        <table>
+            <thead>
+                <tr>
+                    <td>No</td>
+                    <td>Nama</td>
+                    <td>Harga</td>
+                    <td>Gambar</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+
+        <h3></h3>
+        <h4></h4>
+        <table id='output'></table>
+        <h5 id="total"></h5>
+        <p id="checkout"></p>
+        <p id="timer"></p>
+        <p id="bayar"></p>
+    </center>
+</body>
+<script>
+    class Toko{
+        constructor(a,b,c){
+            this.nama=a,
+            this.harga=b,
+            this.gambar=c
+        }
+    }
+    var listProduk = [
+        new Toko('Kangkung', 10000, '../day11/kangkung.jpg'),
+        new Toko('Kuaci', 13000, 'http://gumindo.com/assets/img/products/rebo/new/kuacirebo-original-300gr.jpg'),
+        new Toko('Lays', 8000, 'https://target.scene7.com/is/image/Target/GUEST_52511ec3-b1d5-49e5-8b3e-7e75c6309c8b?wid=488&hei=488&fmt=pjpeg')
+    ]
+    var cart=[
+
+    ]
+    const Printdata=(data)=>{
+        var output = ''
+        data.forEach((val,index) => {
+            output += `<tr>
+                            <td>${index+1}</td>
+                            <td>${val.nama}</td>
+                            <td>${val.harga}</td>
+                            <td><img src = ${val.gambar} height="120px" width="110px"/></td>
+                            <td><button onclick="btnAddChart(${index})"> add to chart</button></td>
+                        </tr>`
+        });
+        document.getElementsByTagName('tbody')[0].innerHTML=output
+    }
+    const totalharga=()=>{
+        var output=0
+        cart.forEach((val)=>{
+            output+=val.harga
+        })
+        return output
+    }
+    const CartCheck=()=>{
+        if(cart.length){
+            var output=`  <table>
+                            <thead>
+                                <tr>
+                                    <td>No</td>
+                                    <td>Nama</td>
+                                    <td>Harga</td>
+                                    <td>Gambar</td>
+                                    <td>Action</td>
+                                </tr>
+                            </thead>
+                            <tbody id='isicart'>
+                            </tbody>
+                        </table>`
+            document.getElementById('checkout').innerHTML=output
+            var cartdata=cart.map((val,index)=>{
+                return(
+                    `<tr>
+                        <td>${index+1}</td>
+                        <td>${val.nama}</td>
+                        <td>${val.harga}</td>
+                        <td><img src = ${val.gambar} height="120px" width="110px"/></td>  
+                        <td><button onclick="OndelelteCartClick(${index})">Delete cart</button></td>
+                    </tr>`
+                )
+            })
+            console.log(cartdata)
+            document.getElementById('isicart').innerHTML=cartdata.join('')
+            document.getElementById('total').innerHTML=`kamu beli ${cart.length} item dengan harga Rp.${totalharga()}`
+            document.getElementById('timer').innerHTML=`<button onclick="onCheckOutClick()">Checkout</button>`
+        }else{
+            document.getElementById('checkout').innerHTML=`<h1>Cart kosong</h1>`
+            document.getElementById('total').innerHTML=``
+            document.getElementById('timer').innerHTML=``
+            document.getElementById('bayar').innerHTML=``
+        }
+    }
+    Printdata(listProduk)
+    CartCheck()
+    const btnAddChart=(indexadd)=>{
+        cart.push(listProduk[indexadd])
+        CartCheck()
+    }
+    const OndelelteCartClick=(indexdelete)=>{
+        cart.splice(indexdelete,1)
+        CartCheck()
+    }
+    var timer
+    var time=10
+    const onCheckOutClick=()=>{
+        document.getElementById('bayar').innerHTML=`<input type='number' placeholder='masukkan uang' id='bayarcart'/> &nbsp; <button onclick="bayaronclick()">Bayar</button>`
+        timer=setInterval(()=>{
+            document.getElementById('timer').innerHTML=`${time} detik`
+            time--
+            if(time==-2){
+                cart=[]
+                time=10
+                clearInterval(timer)
+                CartCheck()
+            }
+        },1000)
+    }
+    const bayaronclick=()=>{
+        var userinput=parseInt(document.getElementById('bayarcart').value)
+        if(userinput<totalharga()){
+            alert('kurang duitnya bor Rp. '+(totalharga()-userinput))
+        }else if(userinput==totalharga()){
+            alert('terima kasih')
+            cart=[]
+            clearInterval(timer)
+            time=10
+            CartCheck()
+        }else{
+            alert('lebih duitnya bor Rp. '+(userinput-totalharga()))
+            cart=[]
+            clearInterval(timer)
+            time=10
+            CartCheck()
+        }
+    }
+</script>
+</html>
