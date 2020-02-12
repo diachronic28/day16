@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tugas</title>
+    <style>
+        tr,td,table{
+            border:black 1px solid;
+            border-collapse: collapse;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <table>
+            <tr>
+                <td>
+                    <h1>Input Manusia</h1>
+                    Nama: <input type="text" id="inputnama"/> <br><br>
+                    Usia: <input type="number" id="usia"/> <br><br>
+                    Gender: Pria <input type="radio" name="sex"/>&nbsp; Wanita <input type="radio" name="sex"/> <br><br>
+                    Pekerjaan: <input type="text" id="inputpekerjaan"/><br><br>
+                    <button onclick="onSubmitClick()">Submit</button>
+                </td>
+            </tr>
+        </table>
+        <br><br>
+        <button onclick="sort('nama')">Nama</button>
+        <button onclick="sort('usia')">Usia</button>
+        <button onclick="sort('gender')">Gender</button>
+        <button onclick="sort('Pekerjaan')">Pekerjaan</button>
+        <br><br>
+        <table>
+            <thead>
+                <tr>
+                    <td>No.</td>
+                    <td>Nama</td>
+                    <td>Usia</td>
+                    <td>Gender</td>
+                    <td>Pekerjaan</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </center>
+</body>
+    <script>
+        class Manusia{
+            constructor(nama,usia,kelamin,pekerjaan){
+                this.nama=nama,
+                this.usia=usia,
+                this.kelamin=kelamin,
+                this.pekerjaan=pekerjaan
+            }
+        }
+
+        var datamanusia=[
+            new Manusia('dobleh',65,'Wanita','Tidur'),
+            new Manusia('jamal',30,'Pria','Makan')
+        ]
+        const sort=(params)=>{
+           for(var i=datamanusia.length-1;i>0;i--){
+               for(var j=0;j<i;j++){
+                   if(datamanusia[j][params]>datamanusia[j+1][params]){
+                       var temp=datamanusia[j]
+                       datamanusia[j]=datamanusia[j+1]
+                       datamanusia [j+1]=temp
+                   }
+               }
+           }
+           Printdata()
+        }
+        const Printdata=()=>{
+            var printdata=datamanusia.map((val,index)=>{
+                return (
+                    `<tr>
+                    <td>${index+1}</td>
+                    <td>${val.nama}</td>
+                    <td>${val.usia}</td>
+                    <td>${val.kelamin}</td>
+                    <td>${val.pekerjaan}</td>
+                    </tr>`
+            )
+        })
+            document.getElementsByTagName('tbody')[1].innerHTML=printdata.join('')
+    }
+    const onSubmitClick=()=>{
+        var nama=document.getElementById('inputnama').value
+        var usia=document.getElementById('usia').value
+        var pekerjaan=document.getElementById('inputpekerjaan').value
+        var kelamin=document.getElementsByName('sex')
+        var kelamininput
+        if(kelamin[0].checked){
+            kelamininput='Pria'
+        }else{
+            kelamininput='Wanita'
+        }
+        datamanusia.push(new Manusia(nama,usia,kelamininput,pekerjaan))
+        Printdata()
+    }
+    </script>
+</html>
+            
+            
+
